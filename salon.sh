@@ -40,12 +40,12 @@ MAKE_APPOINTMENT() {
     read CUSTOMER_NAME
     # insert new customer
     INSERT_CUSTOMER_RESULT=$($PSQL "INSERT INTO customers (phone,name) VALUES('$CUSTOMER_PHONE','$CUSTOMER_NAME')")
-  else
+  fi
     SERVICE_NAME=$($PSQL "SELECT name FROM services WHERE service_id=$SERVICE_ID_SELECTED")
-    echo "What time would you like your$SERVICE_NAME,$CUSTOMER_NAME?"
+    echo "What time would you like your$SERVICE_NAME, $CUSTOMER_NAME?"
     read SERVICE_TIME
     echo $SERVICE_TIME chosen
-  fi
+  
 }
 
 SERVICE_MENU(){
