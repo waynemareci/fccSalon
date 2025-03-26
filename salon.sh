@@ -32,6 +32,7 @@ MAKE_APPOINTMENT() {
 
   echo -e "\nWhat's your phone number?"
   read CUSTOMER_PHONE
+  CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE phone='$'")
 }
 
 SERVICE_MENU(){
