@@ -13,9 +13,9 @@ MAIN_MENU() {
 
   SERVICE_MENU
   
-  read MAIN_MENU_SELECTION
+  read SERVICE_ID_SELECTED
 
-  case $MAIN_MENU_SELECTION in
+  case $SERVICE_ID_SELECTED in
     1) MAKE_APPOINTMENT 1 ;;
     2) MAKE_APPOINTMENT 2 ;;
     3) MAKE_APPOINTMENT 3 ;;
@@ -28,11 +28,24 @@ MAIN_MENU() {
 }
 
 MAKE_APPOINTMENT() {
-  echo "inside make appointment; service_id is " $1
-
+  echo "inside make appointment; service_id is " $SERVICE_ID_SELECTED
+  
   echo -e "\nWhat's your phone number?"
   read CUSTOMER_PHONE
-  CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE phone='$'")
+  CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE phone='$CUSTOMER_PHONE'")
+  # if customer isn't in database
+ if  [[ -z $CUSTOMER_NAME ]]
+  then
+    echo -e "\nI don't have a record for that phone number, what's your name?"
+    read CUSTOMER_NAME
+    # insert new customer
+    INSERT_CUSTOMER_RESULT=$($PSQL "INSERT INTO customers (phone,name) VALUES('$CUSTOMER_PHONE','$CUSTOMER_NAME')")
+  else
+    SERVICE_NAME=$($PSQL "SELECT name FROM services WHERE service_id=$SERVICE_ID_SELECTED")
+    echo "What time would you like your$SERVICE_NAME,$CUSTOMER_NAME?"
+    read SERVICE_TIME
+    echo $SERVICE_TIME chosen
+  fi
 }
 
 SERVICE_MENU(){
